@@ -31,6 +31,8 @@ export default [
         migrate: 'readonly',
         __hooks: 'readonly',
         $apis: 'readonly',
+        $os: 'readonly',
+        Record: 'readonly',
         module: 'readonly',
         require: 'readonly',
       },

@@ -4,6 +4,8 @@ PocketBase data and local uploads live together in `pb_data`. Do not copy this d
 
 Production requires independent encrypted copies on the server, in cloud storage, and on the laptop. Each application has its own keys and repository. A scheduled upload is not a verified backup.
 
+On the first production migration, provide `PB_SUPERUSER_EMAIL` and a random `PB_SUPERUSER_PASSWORD` of at least 24 characters. The foundation migration provisions this recovery-only account. Keep both values server-side, never expose them to the frontend, and rotate them through a reviewed forward migration or the PocketBase administration API.
+
 To verify recovery:
 
 1. Download and verify the archive checksum.

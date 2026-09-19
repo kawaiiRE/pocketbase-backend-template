@@ -6,7 +6,7 @@ A standalone PocketBase 0.40 backend with forward migrations, typed JavaScript h
 
 1. Copy this entire folder to a new wrapper folder and rename the package/app metadata.
 2. Run `corepack yarn install --immutable` and `corepack yarn setup`. The setup script downloads PocketBase 0.40.4 for Windows/Linux x64, verifies the official SHA-256, and generates local hook declarations.
-3. Set `PB_ENCRYPTION_KEY` in your shell or a private environment loader, then run `corepack yarn dev`.
+3. Set `PB_ENCRYPTION_KEY` in your shell or a private environment loader, then run `corepack yarn dev`. For a first production migration, also set a private recovery superuser email and a random password of at least 24 characters; the migration provisions that account for backups and restore verification.
 4. Open `http://127.0.0.1:8090/_/` to create the local superuser. Never use production credentials locally.
 5. Run `corepack yarn check` before handoff.
 

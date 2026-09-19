@@ -11,6 +11,8 @@ services:
       - '127.0.0.1:${BACKEND_PORT}:8080'
     environment:
       PB_ENCRYPTION_KEY: ${PB_ENCRYPTION_KEY}
+      PB_SUPERUSER_EMAIL: ${PB_SUPERUSER_EMAIL}
+      PB_SUPERUSER_PASSWORD: ${PB_SUPERUSER_PASSWORD}
     volumes:
       - ./.runtime/pb_data:/pb/pb_data
     read_only: true

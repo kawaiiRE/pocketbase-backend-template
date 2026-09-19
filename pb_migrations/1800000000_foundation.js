@@ -63,6 +63,19 @@ migrate(
     settings.logs.maxDays = 7;
     settings.logs.logIP = false;
     app.save(settings);
+
+    const recoveryEmail = $os.getenv('PB_SUPERUSER_EMAIL');
+    const recoveryPassword = $os.getenv('PB_SUPERUSER_PASSWORD');
+    if (recoveryEmail || recoveryPassword) {
+      if (!recoveryEmail || !recoveryPassword || recoveryPassword.length < 24) {
+        throw new Error('Recovery credentials must include an email and a 24+ character password.');
+      }
+
+      const recoveryUser = new Record(app.findCollectionByNameOrId('_superusers'));
+      recoveryUser.setEmail(recoveryEmail);
+      recoveryUser.setPassword(recoveryPassword);
+      app.save(recoveryUser);
+    }
   },
   () => {
     throw new Error('Destructive rollback requires an isolated restore from a verified backup.');
