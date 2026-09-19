@@ -1,0 +1,36 @@
+name: ${PROJECT_ID}
+
+services:
+  backend:
+    image: ${PROJECT_ID}-backend:${RELEASE_TAG:-local}
+    build:
+      context: ./backend
+    restart: unless-stopped
+    user: '${PUID:-1000}:${PGID:-1000}'
+    ports:
+      - '127.0.0.1:${BACKEND_PORT}:8080'
+    environment:
+      PB_ENCRYPTION_KEY: ${PB_ENCRYPTION_KEY}
+    volumes:
+      - ./.runtime/pb_data:/pb/pb_data
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 256m
+    cpus: 0.5
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://127.0.0.1:8080/api/v1/health']
+      interval: 20s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+    logging:
+      driver: json-file
+      options:
+        max-size: 5m
+        max-file: '2'

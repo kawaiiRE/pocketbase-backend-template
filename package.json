@@ -1,0 +1,37 @@
+{
+  "name": "pocketbase-next-backend-template",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "packageManager": "yarn@4.18.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "dev": "node scripts/start.mjs",
+    "start": "node scripts/start.mjs",
+    "types:generate": "node scripts/generate-types.mjs",
+    "backup:download": "node scripts/download-backup.mjs",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "format": "prettier --check .",
+    "format:write": "prettier --write .",
+    "check": "yarn format && yarn lint && yarn typecheck && yarn test:run"
+  },
+  "dependencies": {
+    "pocketbase": "0.28.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@types/node": "^24.0.0",
+    "eslint": "^9.39.0",
+    "globals": "^16.4.0",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
+}

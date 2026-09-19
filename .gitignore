@@ -1,0 +1,14 @@
+node_modules/
+.yarn/
+bin/
+generated/
+pb_data/
+.runtime/
+backups/
+.env
+.env.*
+!.env.example
+!.env.backup.example
+coverage/
+*.log
+*.zip

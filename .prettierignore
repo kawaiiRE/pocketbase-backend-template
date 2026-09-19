@@ -1,0 +1,8 @@
+node_modules/
+bin/
+generated/
+pb_data/
+.runtime/
+backups/
+yarn.lock
+*.zip

@@ -1,0 +1,11 @@
+.git
+node_modules
+bin
+generated
+pb_data
+.runtime
+backups
+.env
+.env.*
+*.log
+*.zip

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "types": ["node"],
+    "lib": ["ES2022"]
+  },
+  "include": [
+    "pb_hooks/**/*.js",
+    "pb_hooks/**/*.cjs",
+    "pb_migrations/**/*.js",
+    "scripts/**/*.mjs",
+    "generated/types.d.ts"
+  ]
+}
