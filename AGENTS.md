@@ -25,7 +25,7 @@ This repository is one complete, independent backend codebase. It owns its Pocke
 - Keep `pb_data`, generated declarations, binaries, secrets, archives, logs, and backups out of Git.
 - This backend may share an HTTP contract with a frontend, but the repositories remain independently installable and releasable. Do not use parent-directory imports, symlinks, or shared runtime folders.
 - Add the smallest useful tests and update migrations, hooks, contracts, tests, and docs together.
-- Preserve the versioned `/api/v1/health` contract used by `next-pocketbase-frontend-template`; verify both live services from the frontend with `corepack yarn integration:check`.
+- Preserve the versioned `/api/v1/health` contract used by `next-frontend-template`; verify both live services from the frontend with `corepack yarn integration:check`.
 - Run `corepack yarn setup` once, then `corepack yarn check` before handoff.
 
 ## Deployment contract

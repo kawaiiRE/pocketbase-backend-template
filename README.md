@@ -1,8 +1,8 @@
-# PocketBase + Next.js backend template
+# PocketBase backend template
 
-[![CI](https://github.com/kawaiiRE/pocketbase-next-backend-template/actions/workflows/ci.yml/badge.svg)](https://github.com/kawaiiRE/pocketbase-next-backend-template/actions/workflows/ci.yml)
+[![CI](https://github.com/kawaiiRE/pocketbase-backend-template/actions/workflows/ci.yml/badge.svg)](https://github.com/kawaiiRE/pocketbase-backend-template/actions/workflows/ci.yml)
 
-[Next.js frontend template](https://github.com/kawaiiRE/next-pocketbase-frontend-template) | [Live demo](https://next-template.rachida.dev)
+[Next.js frontend template](https://github.com/kawaiiRE/next-frontend-template) | [Live demo](https://next-template.rachida.dev)
 
 A standalone PocketBase 0.40 backend with forward migrations, typed JavaScript hooks, a checksum-verified installer, strict project boundaries, container deployment, and laptop backup tooling. It keeps the useful discipline of the Fastify template—validation, scoped persistence, services, presenters, tests, and safe releases—without pretending PocketBase is Fastify or Node.js.
 
@@ -14,7 +14,7 @@ A standalone PocketBase 0.40 backend with forward migrations, typed JavaScript h
 4. Open `http://127.0.0.1:8090/_/` to create the local superuser. Never use production credentials locally.
 5. Run `corepack yarn check` before handoff.
 
-The starter creates a locked `users` auth collection and an owner-scoped `notes` collection. Public registration is intentionally disabled. The custom `GET /api/v1/health` route is compatible with the separate `next-pocketbase-frontend-template`, but neither repository imports from the other. Start both services and run `corepack yarn integration:check` from the frontend wrapper to verify the live connection; see `docs/integration.md`.
+The starter creates a locked `users` auth collection and an owner-scoped `notes` collection. Public registration is intentionally disabled. The custom `GET /api/v1/health` route is compatible with the separate `next-frontend-template`, but neither repository imports from the other. Start both services and run `corepack yarn integration:check` from the frontend wrapper to verify the live connection; see `docs/integration.md`.
 
 ## Laptop backup of a server
 

@@ -35,4 +35,4 @@ jobs:
       - name: Run quality gates
         run: yarn check
       - name: Build container
-        run: docker build --tag pocketbase-next-backend-template:ci .
+        run: docker build --tag pocketbase-backend-template:ci .

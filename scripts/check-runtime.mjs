@@ -115,7 +115,7 @@ try {
     !isObject(health) ||
     health.status !== 'ok' ||
     health.apiVersion !== 1 ||
-    health.service !== 'pocketbase-next-backend-template' ||
+    health.service !== 'pocketbase-backend-template' ||
     typeof health.time !== 'string' ||
     Number.isNaN(Date.parse(health.time))
   ) {

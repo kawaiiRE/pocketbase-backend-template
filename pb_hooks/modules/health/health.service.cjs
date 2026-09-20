@@ -16,7 +16,7 @@ function getHealth(now) {
   return {
     status: 'ok',
     apiVersion: 1,
-    service: 'pocketbase-next-backend-template',
+    service: 'pocketbase-backend-template',
     time: checkedAt.toISOString(),
   };
 }

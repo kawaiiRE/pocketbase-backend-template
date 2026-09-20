@@ -1,6 +1,6 @@
 # Next.js integration
 
-This backend works with the separate `next-pocketbase-frontend-template` through a versioned HTTP contract. The repositories stay independently installable and never share source files, environment files, runtime data, credentials, or backup locations.
+This backend works with the separate `next-frontend-template` through a versioned HTTP contract. The repositories stay independently installable and never share source files, environment files, runtime data, credentials, or backup locations.
 
 ## Contract
 
@@ -10,7 +10,7 @@ This backend works with the separate `next-pocketbase-frontend-template` through
 {
   "status": "ok",
   "apiVersion": 1,
-  "service": "pocketbase-next-backend-template",
+  "service": "pocketbase-backend-template",
   "time": "2026-09-19T12:00:00.000Z"
 }
 ```

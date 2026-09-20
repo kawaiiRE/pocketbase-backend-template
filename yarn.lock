@@ -1226,9 +1226,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pocketbase-next-backend-template@workspace:.":
+"pocketbase-backend-template@workspace:.":
   version: 0.0.0-use.local
-  resolution: "pocketbase-next-backend-template@workspace:."
+  resolution: "pocketbase-backend-template@workspace:."
   dependencies:
     "@eslint/js": "npm:10.0.1"
     "@types/node": "npm:^24.0.0"
