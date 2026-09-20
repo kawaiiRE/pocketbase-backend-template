@@ -11,8 +11,13 @@ try {
 }
 
 const port = process.env.PB_PORT ?? '8090';
-if (!/^\d{2,5}$/.test(port)) {
-  throw new Error('PB_PORT must be a valid numeric port.');
+const portNumber = Number(port);
+if (!/^\d+$/.test(port) || !Number.isInteger(portNumber) || portNumber < 1 || portNumber > 65_535) {
+  throw new Error('PB_PORT must be an integer from 1 through 65535.');
+}
+
+if (process.env.PB_ENCRYPTION_KEY && process.env.PB_ENCRYPTION_KEY.length !== 32) {
+  throw new Error('PB_ENCRYPTION_KEY must contain exactly 32 characters.');
 }
 
 const args = [

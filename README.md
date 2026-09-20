@@ -1,5 +1,9 @@
 # PocketBase + Next.js backend template
 
+[![CI](https://github.com/kawaiiRE/pocketbase-next-backend-template/actions/workflows/ci.yml/badge.svg)](https://github.com/kawaiiRE/pocketbase-next-backend-template/actions/workflows/ci.yml)
+
+[Next.js frontend template](https://github.com/kawaiiRE/next-pocketbase-frontend-template) | [Live demo](https://next-template.rachida.dev)
+
 A standalone PocketBase 0.40 backend with forward migrations, typed JavaScript hooks, a checksum-verified installer, strict project boundaries, container deployment, and laptop backup tooling. It keeps the useful discipline of the Fastify template—validation, scoped persistence, services, presenters, tests, and safe releases—without pretending PocketBase is Fastify or Node.js.
 
 ## Local development
@@ -23,3 +27,7 @@ Use PocketBase's consistent backup API instead of copying a running SQLite direc
 - never deletes the server copy or prints credentials.
 
 This is a manual tool, not proof of scheduled backup coverage. Production also needs encrypted server/cloud copies, retention, monitoring, and recurring isolated restore tests. Read `docs/recovery.md`.
+
+## Contributing and security
+
+Contributions are welcome; see `CONTRIBUTING.md`. Report security issues privately by following `SECURITY.md` rather than opening a public issue.

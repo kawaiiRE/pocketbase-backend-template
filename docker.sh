@@ -12,6 +12,13 @@ case "$MODE" in
       echo "Usage: ./docker.sh --backup /absolute/path/to/verified-backup.zip" >&2
       exit 1
     fi
+    case "$BACKUP_FILE" in
+      /*) ;;
+      *)
+        echo "Backup path must be absolute: $BACKUP_FILE" >&2
+        exit 1
+        ;;
+    esac
     ;;
   *)
     echo "Usage: ./docker.sh [--first-install | --backup /absolute/path/to/verified-backup.zip]" >&2
@@ -35,9 +42,26 @@ if [ -n "$(git status --porcelain)" ]; then
   exit 1
 fi
 
-OLD_REVISION=$(git rev-parse HEAD)
-git pull --ff-only
-NEW_REVISION=$(git rev-parse HEAD)
+CURRENT_REVISION=$(git rev-parse HEAD)
+UPSTREAM=$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}')
+git fetch --prune
+NEW_REVISION=$(git rev-parse "$UPSTREAM")
+
+if ! git merge-base --is-ancestor "$CURRENT_REVISION" "$NEW_REVISION"; then
+  echo "Backend checkout cannot fast-forward to $UPSTREAM." >&2
+  exit 1
+fi
+
+REVISION_FILE="$DEPLOY_DIR/.runtime/backend-deployed-revision"
+if [ -f "$REVISION_FILE" ]; then
+  OLD_REVISION=$(cat "$REVISION_FILE")
+  if ! git cat-file -e "$OLD_REVISION^{commit}" 2>/dev/null; then
+    echo "Recorded backend revision is invalid: $OLD_REVISION" >&2
+    exit 1
+  fi
+else
+  OLD_REVISION=$CURRENT_REVISION
+fi
 
 MIGRATIONS_CHANGED=0
 if ! git diff --quiet "$OLD_REVISION" "$NEW_REVISION" -- pb_migrations; then
@@ -56,6 +80,8 @@ if [ "$MIGRATIONS_CHANGED" -eq 1 ] && [ "$MODE" != "--first-install" ]; then
   python3 -c 'import sys,zipfile; z=zipfile.ZipFile(sys.argv[1]); bad=z.testzip(); sys.exit(1 if bad else 0)' "$BACKUP_FILE"
 fi
 
+git merge --ff-only "$NEW_REVISION"
+
 cd "$DEPLOY_DIR"
 docker compose config --quiet
 if ! docker compose config --services | grep -qx "$SERVICE_NAME"; then
@@ -71,6 +97,10 @@ while [ "$attempt" -le 45 ]; do
   if docker compose exec -T "$SERVICE_NAME" wget -q --spider \
     http://127.0.0.1:8080/api/v1/health; then
     docker compose ps "$SERVICE_NAME"
+    mkdir -p "$DEPLOY_DIR/.runtime"
+    REVISION_FILE_TMP="$REVISION_FILE.tmp.$$"
+    printf '%s\n' "$NEW_REVISION" > "$REVISION_FILE_TMP"
+    mv "$REVISION_FILE_TMP" "$REVISION_FILE"
     echo "Backend is healthy."
     exit 0
   fi

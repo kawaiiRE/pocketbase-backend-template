@@ -32,7 +32,9 @@ try {
   if (!(error instanceof Error) || !('code' in error) || error.code !== 'ENOENT') {
     throw error;
   }
+}
 
+if (!bytes) {
   const response = await fetch(
     `https://github.com/pocketbase/pocketbase/releases/download/v${version}/${filename}`,
     { signal: AbortSignal.timeout(300000) },
