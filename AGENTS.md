@@ -10,14 +10,19 @@ This repository is one complete, independent backend codebase. It owns its Pocke
 - Prefer PocketBase collection rules and native record APIs for ordinary CRUD. Add custom routes only for real workflows, transactions, allowlisted responses, or integrations.
 - For custom workflows preserve `route -> service -> repository -> presenter` boundaries when each layer has meaningful work. Do not manufacture empty layers for trivial health checks.
 - Validate and allowlist every untrusted body. Scope ownership in the database query or collection rule, not after fetching.
-- Return raw successful DTOs and safe error responses. Never expose caught exception messages, stack traces, superuser data, or raw private records.
+- Return raw successful DTOs and safe `{ message, code }` error responses through `modules/shared/http-error.cjs`. Never expose caught exception messages, stack traces, superuser data, or raw private records.
+- Read environment variables only through `modules/shared/env.cjs`. Feature flags are read per request; runtime settings (`PB_APP_NAME`, `PB_APP_URL`, SMTP, sender, trusted proxy headers) are applied by the `onBootstrap` hook. Durable settings (rate limits, templates, rules) belong in migrations.
 
 ## Data and authentication
 
 - Migrations are forward-only in production. Never add a reset migration, destructive automatic seed, or rollback that silently deletes data.
 - Every existing database receives a fresh verified backup before a release that changes migrations. Restore-test backups in an isolated target.
 - Keep user auth and `_superusers` separate. Superuser credentials are for administration/recovery and never enter a frontend.
-- Registration is locked by default. Enable it only with product-specific validation, rate limits, email verification, and abuse controls.
+- Registration is closed by default (`PB_REGISTRATION_ENABLED=false`) and only available through `POST /api/v1/auth/register`; `users.createRule` stays `null`. Production enables `PB_REQUIRE_EMAIL_VERIFICATION` with SMTP.
+- Guest sessions are opt-in (`PB_GUEST_ENABLED=false` by default). Guests use the reserved `guest.invalid` domain, never receive email, cannot set `guest`/`email`/`password` through record APIs, upgrade only through `POST /api/v1/auth/guest/upgrade`, and expire through the `guestCleanup` cron job.
+- Keep the built-in rate limiter enabled. Change limits with a new forward migration.
+- Pending migrations must stay schema/settings-only (no record backfills or queries): use field defaults, rules, indexes, and settings.
+- The seed script is local-only and additive. Never add seeding to migrations or hooks.
 - Multi-record writes use `runInTransaction` and the transaction's app instance. Retried external operations need durable idempotency keys.
 
 ## Project boundaries and quality
@@ -25,7 +30,8 @@ This repository is one complete, independent backend codebase. It owns its Pocke
 - Keep `pb_data`, generated declarations, binaries, secrets, archives, logs, and backups out of Git.
 - This backend may share an HTTP contract with a frontend, but the repositories remain independently installable and releasable. Do not use parent-directory imports, symlinks, or shared runtime folders.
 - Add the smallest useful tests and update migrations, hooks, contracts, tests, and docs together.
-- Preserve the versioned `/api/v1/health` contract used by `next-frontend-template`; verify both live services from the frontend with `corepack yarn integration:check`.
+- Preserve the API v1 contract in `docs/integration.md` (health, config, register, guest and guest upgrade, native users/notes behavior, email link paths) used by `next-frontend-template` and the Expo template. Change it only deliberately in all repositories; verify both live services from the frontend with `corepack yarn integration:check`.
+- Keep `.env.example` documenting every variable the hooks and scripts read.
 - Run `corepack yarn setup` once, then `corepack yarn check` before handoff.
 
 ## Deployment contract

@@ -10,8 +10,8 @@ To verify recovery:
 
 1. Download and verify the archive checksum.
 2. Restore into a new isolated directory, never over the running application.
-3. Use the same PocketBase version and recovered settings-encryption key. Do not apply newer migrations during verification.
-4. Run SQLite integrity checks, start the isolated instance on an unused loopback port, and verify collections, representative records, files, and recovery-account authentication.
+3. Use the same PocketBase version and recovered settings-encryption key. Do not apply newer migrations during verification. Leave `PB_SMTP_HOST` unset and set `PB_APP_URL` to a local origin. Stored SMTP settings are recovered too, so disable SMTP in the isolated dashboard and do not trigger auth emails to real users.
+4. Run SQLite integrity checks, start the isolated instance on an unused loopback port, and verify collections, representative records, files, and recovery-account authentication. The hourly guest cleanup also runs in the restored copy and removes guests older than `PB_GUEST_TTL_HOURS`; compare regular accounts, or set a large TTL such as `720` for the test.
 5. Record the source revision, PocketBase version, archive checksum, test result, and time.
 6. Switch traffic only after the isolated restore passes and the intended release migration plan is reviewed.
 
