@@ -2,6 +2,34 @@
 
 This repository is one complete, independent backend codebase. It owns its PocketBase hooks, migrations, tooling, dependencies, deployment contract, and documentation. Never import from a sibling frontend or another project's runtime data.
 
+## Starting a new project from this template
+
+1. Copy the folder into the new project's wrapper (normally `<project>/backend`), delete the copied `.git`, `node_modules`, `pb_data`, `bin`, `generated` and `.runtime`, then `git init` and add the project's own GitHub origin.
+2. Rename `name` in `package.json`, the README title and links, and set `PB_APP_NAME`, `PB_APP_URL` and the mail sender for the project.
+3. `corepack yarn install --immutable`, `corepack yarn setup`, copy `.env.example` to `.env` with a local superuser and run `corepack yarn dev` then `corepack yarn seed`.
+4. Replace the example `notes` collection with the product's data in new forward migrations; keep the existing migrations unchanged.
+5. Run `corepack yarn check`, then follow `docs/deployment.md` and `docs/security.md` (including removing `PB_SUPERUSER_PASSWORD` after first boot).
+
+## Commands
+
+- `corepack yarn setup`: download and verify PocketBase, generate hook declarations.
+- `corepack yarn dev`: run PocketBase locally with `.env`. `corepack yarn seed`: local-only demo data.
+- `corepack yarn check`: Prettier, ESLint, `tsc`, Vitest and the runtime smoke test. Run it before handoff.
+- `corepack yarn backup:download`: laptop backup over an SSH tunnel (reads `.env.backup`).
+
+## Structure
+
+- `pb_migrations/`: forward-only schema and settings migrations.
+- `pb_hooks/main.pb.js`: routes, hooks and cron jobs; `pb_hooks/modules/<area>/`: services, repositories, presenters, validation (`auth`, `config`, `health`, `mail`, `settings`, `shared`).
+- `scripts/`: setup, start, seed, type generation, backup download, runtime smoke test. `tests/`: Vitest unit tests.
+- `docs/`: architecture, integration contract, security, testing, deployment, recovery.
+
+## Git and deployment rules
+
+- Never commit, push or deploy without the owner's explicit go-ahead for that step.
+- Commit messages and pull request descriptions never mention an AI: no `Co-Authored-By` trailer for an assistant, no "Generated with" line, no assistant names or noreply addresses.
+- Deploy only through GitHub: reviewed local commit, push to the project's GitHub origin, then `git pull --ff-only` on the server and build there (`docker.sh` refuses dirty checkouts). Never copy source to a server by SCP, rsync, archives or direct edits.
+
 ## PocketBase architecture
 
 - Use native versioned `pb_migrations` and JavaScript `pb_hooks` with generated PocketBase declarations and `checkJs`.

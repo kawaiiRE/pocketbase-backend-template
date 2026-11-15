@@ -3,7 +3,7 @@
 ## Exposure
 
 - Keep PocketBase off the public Internet when Next.js is the gateway. Bind the host port to loopback and use a private container network; administer through an SSH tunnel.
-- Set `PB_TRUSTED_PROXY_HEADERS` (normally `X-Forwarded-For`) only when PocketBase is reachable exclusively through the gateway, and make the gateway overwrite that header with the real client IP. Otherwise clients can spoof their IP, or all clients share one rate-limit bucket.
+- Set `PB_TRUSTED_PROXY_HEADERS` (normally `X-Forwarded-For`) only when PocketBase is reachable exclusively through the gateway, and make the gateway overwrite that header with the real client IP. Otherwise clients can spoof their IP, or all clients share one rate-limit bucket. The setting is only safe while PocketBase stays private: if its port is ever published or reachable without the gateway, any client can send its own `X-Forwarded-For` and choose its rate-limit bucket. Unset it before exposing PocketBase directly.
 - Keep application users and `_superusers` separate. Restrict superuser access by IP where practical (`superuserIPs`), enable superuser MFA, and keep the dedicated recovery account in a password manager. Superuser credentials never reach a frontend.
 
 ## Authentication
@@ -43,3 +43,15 @@ Limits are per client IP. Behind the Next.js gateway, `PB_TRUSTED_PROXY_HEADERS=
 - Run with `--encryptionEnv=PB_ENCRYPTION_KEY` and an independent 32-character secret. SMTP credentials applied from the environment are stored in the encrypted settings; backups need the same key.
 - Never put credentials in Git, docs, shell history, frontend bundles, logs, or chat. `.env` and `.env.*` (except the examples) are ignored.
 - The seed script (`corepack yarn seed`) refuses `NODE_ENV=production`, non-loopback targets, and instances whose app URL is not a local origin. Its default demo password is for local databases only.
+
+## Removing the superuser password after first boot
+
+`PB_SUPERUSER_EMAIL` and `PB_SUPERUSER_PASSWORD` are read only by the foundation migration, on a fresh database, to create the recovery superuser. After the first successful boot they serve no purpose in the runtime environment and only widen exposure (container inspection, process listings, shared env files).
+
+1. Start the service once with both variables set and confirm you can sign in to the admin UI through an SSH tunnel.
+2. Store the credentials in the password manager.
+3. Remove both variables from the server's private env file and from the `backend` service `environment` in the project Compose file (`compose.example.yml` passes them through).
+4. Recreate the container (`docker compose up -d backend`) and confirm with `docker compose exec backend env` that neither variable is present.
+5. Rotate the password from the admin UI or with `pocketbase superuser upsert` if it was ever shared or logged.
+
+Backup credentials (`POCKETBASE_SUPERUSER_*` in `.env.backup`) stay on the laptop, never on the server.
